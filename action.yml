@@ -1,0 +1,43 @@
+name: "OTel GenAI Fleet Summary"
+description: "Walk a directory of OTel GenAI OTLP span exports, count by model, surface governance findings (missing model/provider attrs, unauthorized model usage, high error rates, token outliers, missing cost annotations), post a Markdown summary as a PR comment, and fail the build on high-severity findings."
+author: "mizcausevic-dev"
+branding:
+  icon: "activity"
+  color: "blue"
+
+inputs:
+  traces-dir:
+    description: "Directory containing *.json OTLP exports."
+    required: true
+  allowed-models:
+    description: "Comma-separated whitelist of approved model identifiers. Spans using non-whitelisted models trigger 'unauthorized-model' (high)."
+    required: false
+  error-rate-threshold:
+    description: "Fraction (0..1) of errored spans above which 'high-error-rate' fires per file. Default 0.05."
+    required: false
+  comment-on-pr:
+    description: "Post the Markdown summary as a PR comment. 'auto' (default) posts only on pull_request events."
+    required: false
+    default: "auto"
+  fail-on-high:
+    description: "Fail the run when any high-severity finding is present (default 'true')."
+    required: false
+    default: "true"
+  github-token:
+    description: "Token used to post the PR comment (defaults to GITHUB_TOKEN)."
+    required: false
+    default: ${{ github.token }}
+
+outputs:
+  total-files:
+    description: "Number of OTLP files analyzed."
+  total-spans:
+    description: "Total GenAI spans across the fleet."
+  high-findings:
+    description: "Count of high-severity findings."
+  unique-models:
+    description: "Number of distinct models in use."
+
+runs:
+  using: "node20"
+  main: "dist/index.js"
