@@ -1,5 +1,5 @@
 name: "OTel GenAI Fleet Summary"
-description: "Walk a directory of OTel GenAI OTLP span exports, count by model, surface governance findings (missing model/provider attrs, unauthorized model usage, high error rates, token outliers, missing cost annotations), post a Markdown summary as a PR comment, and fail the build on high-severity findings."
+description: "Walk OTel GenAI spans, surface governance findings, post summary on PR, fail on missing-model or unauthorized."
 author: "mizcausevic-dev"
 branding:
   icon: "activity"
